@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    
+    "watch" : "nodemon main.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://gitlab.com/adolfoCastelo1/evaluacion_node/issues"
   },
-  "homepage": "https://gitlab.com/adolfoCastelo1/evaluacion_node#readme"
+  "homepage": "https://gitlab.com/adolfoCastelo1/evaluacion_node#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
 }
