@@ -1,10 +1,26 @@
 const express = require('express');
 const MovieController = require('../controllers/movieController.js');
+const UserController = require('../controllers/userController.js');
 
 const movieController = new MovieController();
+const userController = new UserController();
 
-const apiV1Router = express.Router();
+const movieRouter = express.Router();
 
-apiV1Router.get('/api/v1/movies/:keyword', movieController.getMovies);
+movieRouter.get('/:keyword', movieController.getMovies);
 
-module.exports = apiV1Router;
+const authRouter = express.Router();
+
+authRouter.post('/login', (req, res) => {
+    res.send("ok!");
+});
+
+authRouter.post('/logout', (req, res) => {
+    res.send("ok!");
+});
+
+const userRouter = express.Router();
+
+userRouter.post('/signup', userController.signUp )
+
+module.exports = {movieRouter, authRouter, userRouter};
