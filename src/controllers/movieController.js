@@ -8,7 +8,21 @@ module.exports = class MovieController {
         
         axios.get('https://api.themoviedb.org/3/search/movie', { params })
             .then( (response) => {
-                res.send(response.data.results);
+                function compare( a, b ) {
+                    if ( a.suggestionScore < b.suggestionScore ) {
+                      return -1;
+                    }
+                    if ( a.suggestionScore > b.suggestionScore ) {
+                      return 1;
+                    }
+                    return 0;
+                  }
+                  
+                const resultsList = response.data.results.map( (result) => {
+                     result.suggestionScore = Math.floor(Math.random() * 99);
+                     return result;
+                }).sort(compare);
+                res.send(resultsList);
             })
             .catch( (error) => {
                 console.log(error);
