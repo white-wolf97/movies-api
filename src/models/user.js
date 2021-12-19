@@ -5,7 +5,11 @@ const hash = require('../utils/hash.js');
 module.exports = class User {
     static getDB(){
         try{
-            return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'database', 'users.txt'), 'utf8'));
+            const usersBeforeParsing = fs.readFileSync(path.join(__dirname, '..', 'database', 'users.txt'), 'utf8')
+            if(usersBeforeParsing)
+                return JSON.parse(usersBeforeParsing);
+            else
+                return {};
         }
         catch(err){
             throw new DatabaseError('Problem accessing the database!');
