@@ -36,7 +36,7 @@ module.exports = class UsersController {
             if(!User.exists(email))
             {
                 User.add(email, firstName, lastName, password);
-                res.send('Successfully signed up!');
+                res.status(201).send('Successfully signed up!');
             }
             else
                 res.send(`There is already an user with the email ${email}`)
