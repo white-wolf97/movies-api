@@ -1,5 +1,6 @@
 const User = require('../models/user.js');
 const hash = require('../utils/hash.js');
+const TokenBlacklist = require('../models/tokenBlacklist.js');
 const generateAccessToken = require('../utils/generateAccessToken.js')
 
 module.exports = class AuthController{
@@ -42,6 +43,18 @@ module.exports = class AuthController{
     }
 
     logout(req, res){
-        
+        try{
+            const blacklist = TokenBlacklist.getBlacklist();
+            const authHeader = req.headers['authorization']
+            const token = authHeader && authHeader.split(' ')[1];
+
+            blacklist.push(token);
+            TokenBlacklist.saveToDB(blacklist);
+            res.send('Logged out!');
+        }
+        catch(exception){
+            res.status(500).send('An unexpected error occurred!');
+            console.log(exception);
+        }
     }
 }

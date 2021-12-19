@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const TokenBlacklist = require('../models/tokenBlacklist.js');
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
@@ -10,8 +11,13 @@ function authenticateToken(req, res, next) {
     }
 
     try{
-        const decoded = jwt.verify(token, config.tokenSecret);
-        req.user = decoded;
+        if(false/*TokenBlacklist.isInBlacklist(token)*/){
+            throw 'error';
+        }
+        else{
+            const decoded = jwt.verify(token, config.tokenSecret);
+            req.user = decoded;
+        }
     }
     catch(err){
         return res.status(401).send('Invalid token provided');
