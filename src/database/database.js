@@ -22,5 +22,5 @@ module.exports = class Database{
                 if(err)    
                     throw new DatabaseError(err.message);
             });
-    }
+    }  
 }
