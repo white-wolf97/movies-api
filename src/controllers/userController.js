@@ -41,9 +41,9 @@ module.exports = class UsersController {
             else
                 res.send(`There is already an user with the email ${email}`)
         }
-        catch(exception){
+        catch(err){
             res.status(500).send('An unexpected error occurred!');
-            console.log(exception);
+            console.log(err);
         }
     }
 }

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const DatabaseError = require('../exceptions/databaseError.js');
 const TokenBlacklist = require('../models/tokenBlacklist.js');
 
 function authenticateToken(req, res, next) {
@@ -9,10 +10,9 @@ function authenticateToken(req, res, next) {
     if(!token){
         return res.status(401).send("A token is required for authentication");//
     }
-
     try{
-        if(false/*TokenBlacklist.isInBlacklist(token)*/){
-            throw 'error';
+        if(TokenBlacklist.isInBlacklist(token)){
+            return res.status(401).send('Invalid token provided');
         }
         else{
             const decoded = jwt.verify(token, config.tokenSecret);
@@ -20,9 +20,15 @@ function authenticateToken(req, res, next) {
         }
     }
     catch(err){
-        return res.status(401).send('Invalid token provided');
+        if(err instanceof DatabaseError){
+            console.log(err);
+            console.log(err.stack);
+            return res.status(500).send('Internal server error!');
+        }
+        else{
+            return res.status(401).send('Invalid token provided');
+        }
     }
-
     return next();
 }
 

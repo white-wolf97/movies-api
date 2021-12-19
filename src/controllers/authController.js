@@ -52,9 +52,10 @@ module.exports = class AuthController{
             TokenBlacklist.saveToDB(blacklist);
             res.send('Logged out!');
         }
-        catch(exception){
+        catch(err){
             res.status(500).send('An unexpected error occurred!');
-            console.log(exception);
+            console.log(err);
+            console.log(err.stack);
         }
     }
 }

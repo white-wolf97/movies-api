@@ -28,7 +28,7 @@ module.exports = class MovieController {
               })
               .catch( (error) => {
                   console.log(error);
-              });
+              });  
         }
         else{
           const params = new URLSearchParams([['api_key', config.apiKey], ['language', 'es-SP'],  ['page',1]]);

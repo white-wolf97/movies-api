@@ -1,17 +1,38 @@
 const fs = require('fs');
 const path = require('path');
+const DatabaseError = require('../exceptions/databaseError.js');
+
 
 module.exports = class TokenBlacklist{
     static getBlacklist(){
-        return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'), 'utf8'));
+        try{
+            const blacklistBeforeParsing = fs.readFileSync(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'), 'utf8');
+            if(blacklistBeforeParsing)
+                return JSON.parse(blacklistBeforeParsing);
+            else
+                return [];
+        }
+        catch(err){
+            throw new DatabaseError('Problem accessing the database!');
+        }
     }
 
     static saveToDB(blacklist){
-        fs.writeFileSync(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'), JSON.stringify(blacklist), 'utf8');
+        try{
+            fs.writeFileSync(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'), JSON.stringify(blacklist), 'utf8');
+        }
+        catch(err){
+            throw new DatabaseError('Problem accessing the database!');
+        }
     }
 
     static isInBlacklist(token){
-        const blacklist = TokenBlacklist.getBlacklist();
-        return blacklist.hasOwnProperty(token);
+        try{
+            const blacklist = TokenBlacklist.getBlacklist();
+            return blacklist.includes(token);
+        }
+        catch(err){
+            throw new DatabaseError('Problem accessing the database!');
+        }
     }
 }
