@@ -7,7 +7,7 @@ const userController = new UserController();
 
 const movieRouter = express.Router();
 
-movieRouter.get('/:keyword', movieController.getMovies);
+movieRouter.get('/:keyword?', movieController.getMovies);
 
 const authRouter = express.Router();
 
