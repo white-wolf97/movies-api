@@ -4,7 +4,7 @@ const DatabaseError = require('../exceptions/databaseError.js');
 
 module.exports = class Database{
 
-    static init(){ 
+    static init(){  
         if(!fs.existsSync(path.join(__dirname, '..', 'database', 'users.txt')))
             fs.writeFile(path.join(__dirname, '..', 'database', 'users.txt'),'', (err) => {
                 if(err)
