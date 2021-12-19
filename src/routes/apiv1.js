@@ -49,6 +49,8 @@ const movieRouter = express.Router();
  */  
 movieRouter.get('/:keyword?', authenticateToken, movieController.getMovies);
 
+movieRouter.post('/addFavorite?', authenticateToken, movieController.addFavorite);
+
 const authRouter = express.Router();
 
 authRouter.post('/login', authController.login);

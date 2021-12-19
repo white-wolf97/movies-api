@@ -1,5 +1,6 @@
 const config = require('../config');
 const axios = require('axios');
+const Movie = require('../models/movie.js');
 
 module.exports = class MovieController {
     getMovies(req, res) {
@@ -57,5 +58,27 @@ module.exports = class MovieController {
                   res.status(500).send('Internal server error!');
               });
         }
+    }
+
+    addFavorite(req, res){
+      try{
+        const email = req.user.email;
+        const movie = req.body.movie;
+        if(!movie){
+          res.send('Movie cannot be empty!');
+          return;
+        }
+        if(Movie.add(email, movie)){
+          res.status(201).send('Successfully add to favorites!');
+        }
+        else{
+          res.status(409).send('Could not add: the movie was already added to favorites!');
+        }
+      }
+      catch(err){
+        console.log(err);
+        console.log(err.stack);
+        res.status(500).send('Internal server error!');
+      }
     }
 }

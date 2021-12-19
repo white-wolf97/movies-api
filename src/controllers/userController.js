@@ -11,25 +11,25 @@ module.exports = class UsersController {
 
             if(!email)
             {
-                res.send('Email cannot be empty!')
+                res.send('Email cannot be empty!');
                 return;
             }
 
             if(!firstName)
             {
-                res.send('FirstName cannot be empty!')
+                res.send('FirstName cannot be empty!');
                 return;
             }
 
             if(!lastName)
             {
-                res.send('LastName cannot be empty!')
+                res.send('LastName cannot be empty!');
                 return;
             }
 
             if(!password)
             {
-                res.send('Password cannot be empty!')
+                res.send('Password cannot be empty!');
                 return;
             }
             
