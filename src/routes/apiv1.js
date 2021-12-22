@@ -47,9 +47,11 @@ const movieRouter = express.Router();
  *         description: internal server error 
  *   
  */  
-movieRouter.get('/:keyword?', authenticateToken, movieController.getMovies);
+movieRouter.get('/list/:keyword?', authenticateToken, movieController.getMovies);
 
-movieRouter.post('/addFavorite?', authenticateToken, movieController.addFavorite);
+movieRouter.post('/addFavorite', authenticateToken, movieController.addFavorite);
+
+movieRouter.get('/getFavorites', authenticateToken, movieController.getFavorites);
 
 const authRouter = express.Router();
 

@@ -28,13 +28,13 @@ module.exports = class Movie{
     static add(email, movie){
         try{
             const favorites = Movie.getDB();
-            const favorite = favorites.findIndex(f => f.id === movie.id);
+            const favoriteIndex = favorites.findIndex(f => f.id === movie.id);
 
-            if(favorite !== -1){
-                if(favorites[favorite].emails.hasOwnProperty(email)){
+            if(favoriteIndex !== -1){
+                if(favorites[favoriteIndex].emails.hasOwnProperty(email)){
                     return false;
                 } 
-                favorites[favorite].emails[email] = Date.now();
+                favorites[favoriteIndex].emails[email] = Date.now();
             }
             else{
                 favorites.push({
