@@ -69,7 +69,7 @@ module.exports = class MovieController {
                 return;
         }
         if(Movie.add(email, movie)){
-            res.status(201).send('Successfully add to favorites!');
+            res.status(200).send('Successfully added to favorites!');
         }
         else{
             res.status(409).send('Could not add: the movie was already added to favorites!');
