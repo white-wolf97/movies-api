@@ -12,11 +12,11 @@ const movieRouter = express.Router();
 
 /** 
  * @openapi 
- * /api/v1/movies/keyword?:
+ * /api/v1/movies/list:
  *   get: 
  *     description: Gets random movies (if no keyword is specified) or the matching ones (if the keyword is specified) 
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: keyword
  *         required: false
  *         description: The keyword used to filter results
@@ -47,7 +47,7 @@ const movieRouter = express.Router();
  *         description: internal server error 
  *   
  */  
-movieRouter.get('/list/:keyword?', authenticateToken, movieController.getMovies);
+movieRouter.get('/list', authenticateToken, movieController.getMovies);
 
 movieRouter.post('/addFavorite', authenticateToken, movieController.addFavorite);
 

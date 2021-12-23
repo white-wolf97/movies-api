@@ -18,8 +18,7 @@ const swaggerOptions = {
                 name: 'Adolfo Castelo',
                 email: 'adolfocastelo99@gmail.com'
             }
-        }  
-    },
+        },
     components: {
         securitySchemes: {
           bearerAuth: {
@@ -39,6 +38,7 @@ const swaggerOptions = {
           bearerAuth: [],
         },
       ], 
+    },
     apis:['./src/routes/apiv1.js'],  
 }  
 const swaggerDocs = swaggerJSDoc(swaggerOptions);  

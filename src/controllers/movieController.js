@@ -4,7 +4,7 @@ const Movie = require('../models/movie.js');
 
 module.exports = class MovieController {
     getMovies(req, res) {
-        const keyword = req.params.keyword;
+        const keyword = req.query.keyword;
         if(keyword){
             const params = new URLSearchParams([['api_key', config.apiKey], ['language', 'es-SP'], ['query', keyword], ['page',1], ['include_adult', false]]);
         
