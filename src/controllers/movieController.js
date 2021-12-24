@@ -55,7 +55,7 @@ module.exports = class MovieController {
                 })
                 .catch( (error) => {
                     console.log(error);
-                    res.status(500).send('Internal server error!');
+                    res.status(500).json({message: 'Internal server error!'});
                 });
         }
     }
@@ -65,20 +65,20 @@ module.exports = class MovieController {
             const email = req.user.email;
             const movie = req.body.movie;
             if(!movie){
-                res.send('Movie cannot be empty!');
+                res.status(409).json({message: 'Movie cannot be empty!'});
                 return;
         }
         if(Movie.add(email, movie)){
-            res.status(200).send('Successfully added to favorites!');
+            res.status(200).json({message: 'Successfully added to favorites!'});
         }
         else{
-            res.status(409).send('Could not add: the movie was already added to favorites!');
+            res.status(409).json({message: 'Could not add: the movie was already added to favorites!'});
         }
       }
       catch(err){
           console.log(err);
           console.log(err.stack);
-          res.status(500).send('Internal server error!');
+          res.status(500).json({message: 'Internal server error!'});
       }
     }
 
@@ -96,8 +96,7 @@ module.exports = class MovieController {
         try{
             const email = req.user.email;
             const favorites = Movie.getDB();
-            console.log(favorites);
-            if(favorites !== []){
+            if(favorites.length !== 0){
                 let result = favorites.filter(e => {return e.emails.hasOwnProperty(email);});
                 result = result.map((element) => {
                     element.addedAt = element.emails[email];
@@ -105,15 +104,16 @@ module.exports = class MovieController {
                     return element;
                 }).sort(compare);
                 result.forEach(element => delete element.emails);
-                if(result !== [])
+                console.log(result);
+                if(result.length !== 0)
                     return res.send(result);
             }
-            return res.send('You have no favorite movies!');
+            return res.json({message: 'You have no favorite movies!'});
         }
         catch(err){
             console.log(err);
             console.log(err.stack);
-            res.status(500).send('Internal server error!');
+            res.status(500).json({message: 'Internal server error!'});
         }
     }
 }

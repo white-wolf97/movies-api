@@ -11,38 +11,38 @@ module.exports = class UsersController {
 
             if(!email)
             {
-                res.send('Email cannot be empty!');
+                res.status(409).json({message: 'Email cannot be empty!'});
                 return;
             }
 
             if(!firstName)
             {
-                res.send('FirstName cannot be empty!');
+                res.status(409).json({message: 'FirstName cannot be empty!'});
                 return;
             }
 
             if(!lastName)
             {
-                res.send('LastName cannot be empty!');
+                res.status(409).json({message: 'LastName cannot be empty!'});
                 return;
             }
 
             if(!password)
             {
-                res.send('Password cannot be empty!');
+                res.status(409).json({message: 'Password cannot be empty!'});
                 return;
             }
             
             if(!User.exists(email))
             {
                 User.add(email, firstName, lastName, password);
-                res.status(201).send('Successfully signed up!');
+                res.status(201).json({message: 'Successfully signed up!'});
             }
             else
-                res.status(409).send(`There is already an user with the email ${email}`)
+                res.status(409).json({message: `There is already an user with the email ${email}`})
         }
         catch(err){
-            res.status(500).send('An unexpected error occurred!');
+            res.status(500).json({message: 'An unexpected error occurred!'});
             console.log(err);
         }
     }

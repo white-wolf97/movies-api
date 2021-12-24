@@ -326,7 +326,7 @@ const userRouter = express.Router();
 *                  type: string
 *                  example: 1223423fds!
  *     responses:  
- *       200: 
+ *       201: 
  *         description: Successfully signed up!
  *       500:
  *         description: internal server error 

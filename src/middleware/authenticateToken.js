@@ -8,11 +8,11 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1];
 
     if(!token){
-        return res.status(401).send("A token is required for authentication");//
+        return res.status(401).json({message: "A token is required for authentication"});
     }
     try{
         if(TokenBlacklist.isInBlacklist(token)){
-            return res.status(401).send('Invalid token provided');
+            return res.status(401).json({message: 'Invalid token provided'});
         }
         else{
             const decoded = jwt.verify(token, config.tokenSecret);
@@ -23,10 +23,10 @@ function authenticateToken(req, res, next) {
         if(err instanceof DatabaseError){
             console.log(err);
             console.log(err.stack);
-            return res.status(500).send('Internal server error!');
+            return res.status(500).json({message: 'Internal server error!'});
         }
         else{
-            return res.status(401).send('Invalid token provided');
+            return res.status(401).json({message: 'Invalid token provided'});
         }
     }
     return next();

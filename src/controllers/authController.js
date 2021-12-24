@@ -11,19 +11,19 @@ module.exports = class AuthController{
 
             if(!email)
             {
-                res.send('Email cannot be empty!');
+                res.status(409).json({message: 'Email cannot be empty!'});
                 return;
             }
 
             if(!password)
             {
-                res.send('Password cannot be empty!');
+                res.status(409).json({message: 'Password cannot be empty!'});
                 return;
             }
             
             if(!User.exists(email))
             {
-                res.status(409).send(`There is not a registered user with the email ${email} in the database`);
+                res.status(409).json({message: `There is not a registered user with the email ${email} in the database`});
             }
             else
             {
@@ -33,11 +33,11 @@ module.exports = class AuthController{
                     res.json({token: token});
                 }
                 else
-                    res.status(401).send('Wrong password!');
+                    res.status(401).json({message: 'Wrong password!'});
             }
         }
         catch(exception){
-            res.status(500).send('An unexpected error occurred!');
+            res.status(500).json({message: 'An unexpected error occurred!'});
             console.log(exception);
         }
     }
@@ -53,7 +53,7 @@ module.exports = class AuthController{
             res.send('Logged out!');
         }
         catch(err){
-            res.status(500).send('An unexpected error occurred!');
+            res.status(500).json({message: 'An unexpected error occurred!'});
             console.log(err);
             console.log(err.stack);
         }
