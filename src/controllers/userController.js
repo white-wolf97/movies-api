@@ -39,7 +39,7 @@ module.exports = class UsersController {
                 res.status(201).send('Successfully signed up!');
             }
             else
-                res.send(`There is already an user with the email ${email}`)
+                res.status(409).send(`There is already an user with the email ${email}`)
         }
         catch(err){
             res.status(500).send('An unexpected error occurred!');
