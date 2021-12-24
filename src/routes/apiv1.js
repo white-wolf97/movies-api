@@ -334,6 +334,6 @@ const userRouter = express.Router();
  *         description: There is already an user with the email
  *   
  */ 
-userRouter.post('/signup', userController.signUp )
+userRouter.post('/signup', userController.signUp)
 
 module.exports = {movieRouter, authRouter, userRouter};

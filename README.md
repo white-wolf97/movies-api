@@ -1,8 +1,8 @@
 # Evaluacion Node
 
-An API with various endpoints about movies, that connects to external API themoviedb.org
+An API with various endpoints about movies, that connects to external API [themoviedb](https://themoviedb.org)
 
-# How to run?
+## How to run it?
 
 1. Download the files
 2. Open a terminal in the root folder of the project
