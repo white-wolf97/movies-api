@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const hash = require('../utils/hash.js');
+const DatabaseError = require('../exceptions/databaseError.js');
 
 module.exports = class User {
     static getDB(){

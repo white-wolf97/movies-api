@@ -4,14 +4,18 @@ const User = require('../models/user.js')
 module.exports = class UsersController {
     signUp(req, res){
         try{
-            const email = req.body.email.toLowerCase();
-            const firstName = req.body.firstName;
-            const lastName = req.body.lastName;
-            const password = req.body.password;
+            const email = req.body.email.toLowerCase().trim();
+            const firstName = req.body.firstName.trim();
+            const lastName = req.body.lastName.trim();
+            const password = req.body.password.trim();
 
             if(!email)
             {
                 res.status(409).json({message: 'Email cannot be empty!'});
+                return;
+            }
+            if(!/.+\@.+\..+/.test(email)){
+                res.status(409).json({message: 'Invalid email!'});
                 return;
             }
 

@@ -6,23 +6,25 @@ const generateAccessToken = require('../utils/generateAccessToken.js')
 module.exports = class AuthController {
     login(req, res){
         try{
-            const email = req.body.email.toLowerCase();
-            const password = req.body.password;
+            const email = req.body.email.toLowerCase().trim();
+            const password = req.body.password.trim();
 
-            if(!email)
-            {
+            if(!email){
                 res.status(409).json({message: 'Email cannot be empty!'});
                 return;
             }
 
-            if(!password)
-            {
+            if(!/.+\@.+\..+/.test(email)){
+                res.status(409).json({message: 'Invalid email!'});
+                return;   
+            }
+
+            if(!password){
                 res.status(409).json({message: 'Password cannot be empty!'});
                 return;
             }
-            
-            if(!User.exists(email))
-            {
+
+            if(!User.exists(email)){
                 res.status(409).json({message: `There is not a registered user with the email ${email} in the database`});
                 return;
             }
