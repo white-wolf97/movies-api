@@ -50,7 +50,7 @@ module.exports = class AuthController{
 
             blacklist.push(token);
             TokenBlacklist.saveToDB(blacklist);
-            res.send('Logged out!');
+            res.json({message: 'Logged out!'});
         }
         catch(err){
             res.status(500).json({message: 'An unexpected error occurred!'});
