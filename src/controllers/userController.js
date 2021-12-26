@@ -43,7 +43,7 @@ module.exports = class UsersController {
         }
         catch(err){
             res.status(500).json({message: 'An unexpected error occurred!'});
-            console.log(err);
+            console.log(err.message);
         }
     }
 }

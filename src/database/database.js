@@ -2,25 +2,31 @@ const fs = require('fs');
 const path = require('path');
 const DatabaseError = require('../exceptions/databaseError.js');
 
-module.exports = class Database{
-
+module.exports = class Database {
     static init(){  
-        if(!fs.existsSync(path.join(__dirname, '..', 'database', 'users.txt')))
-            fs.writeFile(path.join(__dirname, '..', 'database', 'users.txt'),'', (err) => {
-                if(err)
+        const usersDBPath = path.join(__dirname, 'users.txt');
+        const favoritesDBPath = path.join(__dirname, 'favorites.txt');
+        const blacklistDBPath = path.join(__dirname, 'tokenBlacklist.txt');
+
+        if(!fs.existsSync(usersDBPath)) {
+            fs.writeFile(usersDBPath, '', (err) => {
+                if (err) 
                     throw new DatabaseError(err.message);
-            });
+            })
+        }
         
-        if(!fs.existsSync(path.join(__dirname, '..', 'database', 'favorites.txt')))
-            fs.writeFile(path.join(__dirname, '..', 'database', 'favorites.txt'),'', (err) => {
+        if(!fs.existsSync(favoritesDBPath)) {
+            fs.writeFile(favoritesDBPath, '', (err) => {
                 if(err)
                     throw new DatabaseError(err.message);
             });
- 
-        if(!fs.existsSync(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt')))
-            fs.writeFile(path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'),'', (err) => {
+        }
+
+        if(!fs.existsSync(blacklistDBPath)) {
+            fs.writeFile(blacklistDBPath, '', (err) => {
                 if(err)    
                     throw new DatabaseError(err.message);
             });
+        }
     }  
 }

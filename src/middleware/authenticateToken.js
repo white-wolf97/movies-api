@@ -10,6 +10,7 @@ function authenticateToken(req, res, next) {
     if(!token){
         return res.status(401).json({message: "A token is required for authentication"});
     }
+
     try{
         if(TokenBlacklist.isInBlacklist(token)){
             return res.status(401).json({message: 'Invalid token provided'});
@@ -21,7 +22,7 @@ function authenticateToken(req, res, next) {
     }
     catch(err){
         if(err instanceof DatabaseError){
-            console.log(err);
+            console.log(err.message);
             console.log(err.stack);
             return res.status(500).json({message: 'Internal server error!'});
         }
@@ -29,7 +30,7 @@ function authenticateToken(req, res, next) {
             return res.status(401).json({message: 'Invalid token provided'});
         }
     }
-    return next();
+    next();
 }
 
 module.exports = authenticateToken;

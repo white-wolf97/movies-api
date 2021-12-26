@@ -2,7 +2,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 
 dotenv.config({
-    path: path.resolve(__dirname, '..', '..', '.env')
+    path: path.join(__dirname, '..', '..', '.env')
 });
 
 const config = {
@@ -12,4 +12,4 @@ const config = {
     tokenSecret : process.env.TOKEN_SECRET || ''
 };
 
-module.exports = config;  
+module.exports = config;

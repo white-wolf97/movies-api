@@ -3,7 +3,7 @@ const hash = require('../utils/hash.js');
 const TokenBlacklist = require('../models/tokenBlacklist.js');
 const generateAccessToken = require('../utils/generateAccessToken.js')
 
-module.exports = class AuthController{
+module.exports = class AuthController {
     login(req, res){
         try{
             const email = req.body.email.toLowerCase();
@@ -24,17 +24,17 @@ module.exports = class AuthController{
             if(!User.exists(email))
             {
                 res.status(409).json({message: `There is not a registered user with the email ${email} in the database`});
+                return;
+            }
+
+            const users = User.getDB();
+            if(hash(password) === users[email].password){
+                const token = generateAccessToken(email);
+                res.json({token: token});
             }
             else
-            {
-                const users = User.getDB();
-                if(hash(password) === users[email].password){
-                    const token = generateAccessToken(email);
-                    res.json({token: token});
-                }
-                else
-                    res.status(401).json({message: 'Wrong password!'});
-            }
+                res.status(401).json({message: 'Wrong password!'});
+
         }
         catch(exception){
             res.status(500).json({message: 'An unexpected error occurred!'});
@@ -54,7 +54,7 @@ module.exports = class AuthController{
         }
         catch(err){
             res.status(500).json({message: 'An unexpected error occurred!'});
-            console.log(err);
+            console.log(err.message);
             console.log(err.stack);
         }
     }
