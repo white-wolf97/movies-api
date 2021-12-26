@@ -8,4 +8,4 @@ An API with various endpoints about movies, that connects to external API [themo
 2. Open a terminal in the root folder of the project
 3. Run 'npm install'
 4. Create a .env file based on the contents of the example.env file
-5. run 'npm run start'
+5. Run 'npm run start'
