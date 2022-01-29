@@ -1,4 +1,4 @@
-# Evaluacion Node
+# Node evaluation
 
 An API with various endpoints about movies, that connects to external API [themoviedb](https://themoviedb.org)
 
