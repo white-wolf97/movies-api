@@ -32,7 +32,8 @@ module.exports = class AuthController {
             const users = User.getDB();
             if (hash(password) === users[email].password) {
                 const token = generateAccessToken(email);
-                res.json({ status: 'success', data: { token: token } });
+                const { firstName, lastName } = users[email];
+                res.json({ status: 'success', data: { token: token, user: firstName + ' ' + lastName } });
             }
             else
                 res.status(401).json({ status: 'fail', data: { message: 'Wrong password!' } });
