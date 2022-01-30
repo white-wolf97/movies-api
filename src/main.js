@@ -3,55 +3,56 @@ const config = require('./config');
 const Database = require('./database/database.js')
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
-const {movieRouter, authRouter, userRouter} = require('./routes/apiv1.js');
-
+const { movieRouter, authRouter, userRouter } = require('./routes/apiv1.js');
+const cors = require('cors');
 const app = express();
 
 // Swagger Configuration  
-const swaggerDocs = swaggerJSDoc({  
-	swaggerDefinition: {  
+const swaggerDocs = swaggerJSDoc({
+	swaggerDefinition: {
 		openapi: '3.0.0',
-		info: {  
-			title:'Node challenge API',  
-			version:'1.0.0',
+		info: {
+			title: 'Node challenge API',
+			version: '1.0.0',
 			description: 'This is the API for the challenge of CodigoDelSur!',
-			contact: { 
+			contact: {
 				name: 'Adolfo Castelo',
 				email: 'adolfo.castelo.ac@gmail.com'
 			}
 		},
 		components: {
 			securitySchemes: {
-		  		bearerAuth: {
+				bearerAuth: {
 					type: 'http',
 					scheme: 'bearer',
 					bearerFormat: 'JWT',
-		  		}
+				}
 			},
 			responses: {
 				UnauthorizedError: {
 					description: 'Access token is missing or invalid'
 				}
 			}
-		}, 
+		},
 		security: [{
 			bearerAuth: [],
-		}], 
+		}],
 	},
-	apis:['./src/routes/apiv1.js']
+	apis: ['./src/routes/apiv1.js']
 })
 
-try { 
+try {
 	Database.init();
-} 
-catch(err) {  
+}
+catch (err) {
 	console.log('Error initializing database');
 	console.log(err.message);
 	console.log(err.stack);
 	process.exit(1);
 }
 
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerDocs)); 
+app.use(cors());
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(express.json()); // To be able to parse the req body parameters. 
 app.use('/api/v1/movies', movieRouter);
 app.use('/api/v1/auth', authRouter);
