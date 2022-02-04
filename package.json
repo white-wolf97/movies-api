@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "watch": "nodemon src/main.js",
+    "dev": "nodemon src/main.js",
     "start": "node src/main.js"
   },
   "repository": {

@@ -1,12 +1,8 @@
 const express = require('express');
 const authenticateToken = require('../middleware/authenticateToken.js');
-const MovieController = require('../controllers/movieController.js');
-const UserController = require('../controllers/userController.js');
-const AuthController = require('../controllers/authController.js');
-
-const movieController = new MovieController();
-const userController = new UserController();
-const authController = new AuthController();
+const { login, logout } = require('../controllers/auth.js');
+const signUp = require('../controllers/user.js');
+const { getMovies, addFavorite, getFavorites } = require('../controllers/movie.js');
 
 const movieRouter = express.Router();
 
@@ -83,8 +79,8 @@ const movieRouter = express.Router();
  *       401:
  *         description: unauthorized
  *   
- */  
-movieRouter.get('/list', authenticateToken, movieController.getMovies);
+ */
+movieRouter.get('/list', authenticateToken, getMovies);
 
 
 /** 
@@ -159,8 +155,8 @@ movieRouter.get('/list', authenticateToken, movieController.getMovies);
  *       409:
  *         description: Could not add, the movie was already added to favorites!
  *   
- */  
-movieRouter.post('/addFavorite', authenticateToken, movieController.addFavorite);
+ */
+movieRouter.post('/addFavorite', authenticateToken, addFavorite);
 
 
 /** 
@@ -236,7 +232,7 @@ movieRouter.post('/addFavorite', authenticateToken, movieController.addFavorite)
  *         description: unauthorized
  *   
  */
-movieRouter.get('/getFavorites', authenticateToken, movieController.getFavorites);
+movieRouter.get('/getFavorites', authenticateToken, getFavorites);
 
 const authRouter = express.Router();
 
@@ -277,8 +273,8 @@ const authRouter = express.Router();
  *       409:
  *         description: There is not a registered user with the email in the database
  *   
- */ 
-authRouter.post('/login', authController.login);
+ */
+authRouter.post('/login', login);
 
 
 /** 
@@ -294,8 +290,8 @@ authRouter.post('/login', authController.login);
  *       401:
  *         description: unauthorized
  *   
- */ 
-authRouter.post('/logout',authenticateToken, authController.logout);
+ */
+authRouter.post('/logout', authenticateToken, logout);
 
 const userRouter = express.Router();
 
@@ -333,7 +329,7 @@ const userRouter = express.Router();
  *       409:
  *         description: There is already an user with the email
  *   
- */ 
-userRouter.post('/signup', userController.signUp)
+ */
+userRouter.post('/signup', signUp)
 
-module.exports = {movieRouter, authRouter, userRouter};
+module.exports = { movieRouter, authRouter, userRouter };
