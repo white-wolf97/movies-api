@@ -5,6 +5,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 const { movieRouter, authRouter, userRouter } = require('./routes/apiv1.js');
 const cors = require('cors');
+const { dbConnection } = require('./database/config');
 const app = express();
 
 // Swagger Configuration  
@@ -42,7 +43,8 @@ const swaggerDocs = swaggerJSDoc({
 })
 
 try {
-	Database.init();
+	dbConnection();
+	//Database.init();
 }
 catch (err) {
 	console.log('Error initializing database');
