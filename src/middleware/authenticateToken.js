@@ -3,7 +3,7 @@ const config = require('../config');
 const DatabaseError = require('../exceptions/databaseError.js');
 const TokenBlacklist = require('../models/tokenBlacklist.js');
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -12,7 +12,8 @@ function authenticateToken(req, res, next) {
     }
 
     try {
-        if (TokenBlacklist.isInBlacklist(token)) {
+        const tokenInBlacklist = await TokenBlacklist.findOne({ token });
+        if (tokenInBlacklist) {
             return res.status(401).json({ status: 'fail', data: { message: 'Invalid token provided' } });
         }
         else {

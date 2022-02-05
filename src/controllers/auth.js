@@ -3,7 +3,7 @@ const hash = require('../utils/hash.js');
 const TokenBlacklist = require('../models/tokenBlacklist.js');
 const generateAccessToken = require('../utils/generateAccessToken.js')
 
-const login = (req, res) => {
+const login = async (req, res) => {
     try {
         const email = req.body.email.toLowerCase().trim();
         const password = req.body.password.trim();
@@ -22,16 +22,15 @@ const login = (req, res) => {
             res.status(409).json({ status: 'fail', data: { message: 'Password cannot be empty!' } });
             return;
         }
-
-        if (!User.exists(email)) {
+        const user = await User.findOne({ email });
+        if (!user) {
             res.status(409).json({ status: 'fail', data: { message: `There is not a registered user with the email ${email} in the database` } });
             return;
         }
 
-        const users = User.getDB();
-        if (hash(password) === users[email].password) {
+        if (hash(password) === user.password) {
             const token = generateAccessToken(email);
-            const { firstName, lastName } = users[email];
+            const { firstName, lastName } = user;
             res.json({ status: 'success', data: { token: token, user: firstName + ' ' + lastName } });
         }
         else
@@ -44,14 +43,12 @@ const login = (req, res) => {
     }
 }
 
-const logout = (req, res) => {
+const logout = async (req, res) => {
     try {
-        const blacklist = TokenBlacklist.getBlacklist();
         const authHeader = req.headers['authorization']
         const token = authHeader && authHeader.split(' ')[1];
-
-        blacklist.push(token);
-        TokenBlacklist.saveToDB(blacklist);
+        const newTokenInDb = new TokenBlacklist({ token });
+        await newTokenInDb.save();
         res.json({ status: 'success', data: { message: 'Logged out!' } });
     }
     catch (err) {
