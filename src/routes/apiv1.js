@@ -71,9 +71,6 @@ const movieRouter = express.Router();
  *                   vote_count: 
  *                      type: integer
  *                      example: 4426
- *                   suggestionScore:
- *                      type: integer
- *                      example: 3
  *       500:
  *         description: internal server error 
  *       401:
@@ -142,9 +139,6 @@ movieRouter.get('/list', authenticateToken, getMovies);
 *                    vote_count: 
 *                      type: integer
 *                      example: 4426
-*                    suggestionScore:
-*                      type: integer
-*                      example: 3
  *     responses:  
  *       200: 
  *         description: Successfully added to favorites!
@@ -217,15 +211,9 @@ movieRouter.post('/addFavorite', authenticateToken, addFavorite);
  *                   vote_count: 
  *                      type: integer
  *                      example: 4426
- *                   suggestionScore:
- *                      type: integer
- *                      example: 3
  *                   addedAt:
  *                      type: integer
  *                      example: 1640210315987
- *                   suggestionForTodayScore:
- *                      type: integer
- *                      example: 1
  *       500:
  *         description: internal server error 
  *       401:

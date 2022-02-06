@@ -1,54 +1,77 @@
-const fs = require('fs');
-const path = require('path');
-const DatabaseError = require('../exceptions/databaseError.js');
 
-module.exports = class Movie{
-    static getDB(){
-        try{
-            const favoritesBeforeParsing = fs.readFileSync(path.join(__dirname, '..', 'database', 'favorites.txt'), 'utf8')
-            if(favoritesBeforeParsing)
-                return JSON.parse(favoritesBeforeParsing);
-            else
-                return [];
-        }
-        catch(err){
-            throw new DatabaseError('Problem accessing the database!');
-        }
-    }
+const { Schema, model } = require('mongoose');
 
-    static saveToDB(favorites){
-        try{
-            fs.writeFileSync(path.join(__dirname, '..', 'database', 'favorites.txt'), JSON.stringify(favorites), 'utf8');
-        }
-        catch(err){
-            throw new DatabaseError('Problem accessing the database!');
-        }
-    }
 
-    static add(email, movie){
-        try{
-            const favorites = Movie.getDB();
-            const favoriteIndex = favorites.findIndex(f => f.id === movie.id);
+const emailAndDateSchema = new Schema({
+    email: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: Number,
+        required: true,
+    },
+});
 
-            if(favoriteIndex !== -1){
-                if(favorites[favoriteIndex].emails.hasOwnProperty(email)){
-                    return false;
-                } 
-                favorites[favoriteIndex].emails[email] = Date.now();
-            }
-            else{
-                favorites.push({
-                    ...movie, 
-                    emails : {
-                        [email]: Date.now()
-                    }
-                })
-            }
-            Movie.saveToDB(favorites);
-            return true;
-        }
-        catch(err){
-            throw new DatabaseError('Problem accessing the database!');
-        }
-    }
-}
+const FavoriteSchema = Schema({
+    adult: {
+        type: Boolean,
+        required: true,
+    },
+    backdrop_path: {
+        type: String,
+        required: true,
+    },
+    genre_ids: {
+        type: [Number],
+        required: true,
+    },
+    id: {
+        type: Number,
+        required: true,
+        unique: true,
+    },
+    original_language: {
+        type: String,
+        required: true,
+    },
+    original_title: {
+        type: String,
+        required: true,
+    },
+    overview: {
+        type: String,
+        required: true,
+    },
+    popularity: {
+        type: Number,
+        required: true,
+    },
+    poster_path: {
+        type: String,
+        required: true,
+    },
+    release_date: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    video: {
+        type: Boolean,
+        required: true,
+    },
+    vote_average: {
+        type: Number,
+        required: true,
+    },
+    vote_count: {
+        type: Number,
+        required: true,
+    },
+    emailsAndDates: [emailAndDateSchema]
+});
+
+module.exports = model('Favorite', FavoriteSchema);

@@ -1,6 +1,5 @@
 const express = require('express');
 const config = require('./config');
-const Database = require('./database/database.js')
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 const { movieRouter, authRouter, userRouter } = require('./routes/apiv1.js');
@@ -54,6 +53,7 @@ catch (err) {
 }
 
 app.use(cors());
+app.use(express.static('public'));
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(express.json()); // To be able to parse the req body parameters. 
 app.use('/api/v1/movies', movieRouter);

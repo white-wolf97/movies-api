@@ -9,23 +9,7 @@ const getMovies = (req, res) => {
 
         axios.get('https://api.themoviedb.org/3/search/movie', { params })
             .then((response) => {
-
-                function compare(a, b) {
-                    if (a.suggestionScore < b.suggestionScore) {
-                        return -1;
-                    }
-                    if (a.suggestionScore > b.suggestionScore) {
-                        return 1;
-                    }
-                    return 0;
-                }
-
-                const resultsList = response.data.results.map((result) => {
-                    result.suggestionScore = Math.floor(Math.random() * 99);
-                    return result;
-                }).sort(compare);
-
-                res.json({ status: 'success', data: resultsList });
+                res.json({ status: 'success', data: response.data.results });
             })
             .catch((error) => {
                 console.log(error);
@@ -38,21 +22,7 @@ const getMovies = (req, res) => {
         axios.get('https://api.themoviedb.org/3/movie/popular', { params })
             .then((response) => {
 
-                function compare(a, b) {
-                    if (a.suggestionScore < b.suggestionScore) {
-                        return -1;
-                    }
-                    if (a.suggestionScore > b.suggestionScore) {
-                        return 1;
-                    }
-                    return 0;
-                }
-
-                const resultsList = response.data.results.map((result) => {
-                    result.suggestionScore = Math.floor(Math.random() * 99);
-                    return result;
-                }).sort(compare);
-                res.json({ status: 'success', data: resultsList });
+                res.json({ status: 'success', data: response.data.results });
             })
             .catch((error) => {
                 console.log(error);
@@ -61,7 +31,7 @@ const getMovies = (req, res) => {
     }
 }
 
-const addFavorite = (req, res) => {
+const addFavorite = async (req, res) => {
     try {
         const email = req.user.email;
         const movie = req.body.movie;
@@ -69,12 +39,22 @@ const addFavorite = (req, res) => {
             res.status(409).json({ status: 'fail', data: { message: 'Movie cannot be empty!' } });
             return;
         }
-        if (Movie.add(email, movie)) {
-            res.status(200).json({ status: 'success', data: { message: 'Successfully added to favorites!' } });
+        let movieDb = await Movie.findOne({ id: movie.id })
+
+        if (movieDb) {
+            if (movieDb.emailsAndDates.find(e => e.email === email)) {
+                return res.status(409).json({ status: 'fail', data: { message: 'Could not add: the movie was already added to favorites!' } });
+            }
+            else {
+                movieDb.emailsAndDates = [...movieDb.emailsAndDates, { email, date: Date.now() }]
+                await movieDb.save();
+                return res.status(200).json({ status: 'success', data: { message: 'Successfully added to favorites!' } });
+            }
         }
-        else {
-            res.status(409).json({ status: 'fail', data: { message: 'Could not add: the movie was already added to favorites!' } });
-        }
+        movieDb = new Movie(movie);
+        movieDb.emailsAndDates = [{ email, date: Date.now() }];
+        await movieDb.save();
+        return res.status(200).json({ status: 'success', data: { message: 'Successfully added to favorites!' } });
     }
     catch (err) {
         console.log(err.message);
@@ -83,40 +63,31 @@ const addFavorite = (req, res) => {
     }
 }
 
-const getFavorites = (req, res) => {
-    function compare(a, b) {
-        if (a.suggestionForTodayScore < b.suggestionForTodayScore) {
-            return -1;
-        }
-        if (a.suggestionForTodayScore > b.suggestionForTodayScore) {
-            return 1;
-        }
-        return 0;
-    }
-
+const getFavorites = async (req, res) => {
     try {
         const email = req.user.email;
-        const favorites = Movie.getDB();
+        let favorites = await Movie.find();
 
         if (favorites.length === 0) {
-            return res.json([]);
+            return res.json({ status: 'success', data: [] });
         }
 
-        let result = favorites.filter(e => {
-            return e.emails.hasOwnProperty(email);
+        favorites = favorites.filter(e => {
+            return !!e.emailsAndDates.find(emailAndDate => emailAndDate.email === email);
         });
 
-        result = result.map((movie) => {
-            movie.addedAt = movie.emails[email];
-            movie.suggestionForTodayScore = Math.floor(Math.random() * 99);
+        favorites = favorites.map((movie) => {
+            const { date } = movie.emailsAndDates.find(e => e.email === email);
+            movie.addedAt = date;
             return movie;
-        }).sort(compare);
-
-        result.forEach(element => {
-            delete element.emails
         });
 
-        res.json({ status: 'success', data: result });
+        favorites.forEach(element => {
+            element.emailsAndDates = undefined;
+            element.__v = undefined;
+        });
+
+        res.json({ status: 'success', data: favorites });
     }
     catch (err) {
         console.log(err.message);
