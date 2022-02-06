@@ -3,6 +3,8 @@ const authenticateToken = require('../middleware/authenticateToken.js');
 const { login, logout } = require('../controllers/auth.js');
 const signUp = require('../controllers/user.js');
 const { getMovies, addFavorite, getFavorites } = require('../controllers/movie.js');
+const validateFields = require('../middleware/validateFields.js');
+const { check } = require('express-validator');
 
 const movieRouter = express.Router();
 
@@ -150,7 +152,9 @@ movieRouter.get('/list', authenticateToken, getMovies);
  *         description: Could not add, the movie was already added to favorites!
  *   
  */
-movieRouter.post('/addFavorite', authenticateToken, addFavorite);
+movieRouter.post('/addFavorite', [
+	check('movie', 'Movie can not be empty').not().isEmpty(),
+	validateFields], authenticateToken, addFavorite);
 
 
 /** 
@@ -262,7 +266,11 @@ const authRouter = express.Router();
  *         description: There is not a registered user with the email in the database
  *   
  */
-authRouter.post('/login', login);
+authRouter.post('/login', [
+	check('email', 'Please enter a valid email').isEmail(),
+	check('password', 'Please enter a password').trim().not().isEmpty(),
+	validateFields
+], login);
 
 
 /** 
@@ -318,6 +326,11 @@ const userRouter = express.Router();
  *         description: There is already an user with the email
  *   
  */
-userRouter.post('/signup', signUp)
+userRouter.post('/signup', [
+	check('email', 'Please enter a valid email').isEmail(),
+	check('password', 'Please enter a password').trim().not().isEmpty(),
+	check('firstName', 'Please enter your firstname').trim().not().isEmpty(),
+	check('lastName', 'Please enter your lastname').trim().not().isEmpty(),
+	validateFields], signUp)
 
 module.exports = { movieRouter, authRouter, userRouter };

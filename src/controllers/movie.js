@@ -35,10 +35,7 @@ const addFavorite = async (req, res) => {
     try {
         const email = req.user.email;
         const movie = req.body.movie;
-        if (!movie) {
-            res.status(409).json({ status: 'fail', data: { message: 'Movie cannot be empty!' } });
-            return;
-        }
+
         let movieDb = await Movie.findOne({ id: movie.id })
 
         if (movieDb) {

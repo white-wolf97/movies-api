@@ -10,30 +10,6 @@ const signUp = async (req, res) => {
         const lastName = req.body.lastName.trim();
         const password = req.body.password.trim();
 
-        if (!email) {
-            res.status(409).json({ status: 'fail', data: { message: 'Email cannot be empty!' } });
-            return;
-        }
-        if (!/.+\@.+\..+/.test(email)) {
-            res.status(409).json({ status: 'fail', data: { message: 'Invalid email!' } });
-            return;
-        }
-
-        if (!firstName) {
-            res.status(409).json({ status: 'fail', data: { message: 'FirstName cannot be empty!' } });
-            return;
-        }
-
-        if (!lastName) {
-            res.status(409).json({ status: 'fail', data: { message: 'LastName cannot be empty!' } });
-            return;
-        }
-
-        if (!password) {
-            res.status(409).json({ status: 'fail', data: { message: 'Password cannot be empty!' } });
-            return;
-        }
-
         let user = await User.findOne({ email })
         if (user) {
             res.status(409).json({ status: 'fail', data: { message: `There is already an user with the email ${email}` } })

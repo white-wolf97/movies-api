@@ -8,20 +8,6 @@ const login = async (req, res) => {
         const email = req.body.email.toLowerCase().trim();
         const password = req.body.password.trim();
 
-        if (!email) {
-            res.status(409).json({ status: 'fail', data: { statusmessage: 'Email cannot be empty!' } });
-            return;
-        }
-
-        if (!/.+\@.+\..+/.test(email)) {
-            res.status(409).json({ status: 'fail', data: { message: 'Invalid email!' } });
-            return;
-        }
-
-        if (!password) {
-            res.status(409).json({ status: 'fail', data: { message: 'Password cannot be empty!' } });
-            return;
-        }
         const user = await User.findOne({ email });
         if (!user) {
             res.status(409).json({ status: 'fail', data: { message: `There is not a registered user with the email ${email} in the database` } });
