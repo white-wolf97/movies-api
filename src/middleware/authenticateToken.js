@@ -22,14 +22,7 @@ async function authenticateToken(req, res, next) {
         }
     }
     catch (err) {
-        if (err instanceof DatabaseError) {
-            console.log(err.message);
-            console.log(err.stack);
-            return res.status(500).json({ status: 'error', data: { message: 'Internal server error!' } });
-        }
-        else {
-            return res.status(401).json({ status: 'fail', data: { message: 'Invalid token provided' } });
-        }
+        return res.status(401).json({ status: 'fail', data: { message: 'Invalid token provided' } });
     }
     next();
 }
