@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const DatabaseError = require('../exceptions/databaseError.js');
 const TokenBlacklist = require('../models/tokenBlacklist.js');
 
 async function authenticateToken(req, res, next) {
